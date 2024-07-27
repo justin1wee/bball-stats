@@ -38,6 +38,20 @@ def get_ball_data(endpoint, api_key, params=None):
 
     return pd.DataFrame(all_data)
 
+# function to transform and clean dataframe
+def clean_bball_data(df):
+
+    # removes all NaN values and resets index
+    df.dropna(inplace=True)
+    df.reset_index(drop=True, inplace=True)
+
+    # transforms 'draft_year', 'draft_round', and 'draft_number' columns from str to int
+    cols = ['draft_year', 'draft_round', 'draft_number']
+    df[cols] = df[cols].astype(int)
+    
+    return df
+
+
 api_key = get_api_key('secrets/api_key.txt')
 
 # players data
@@ -46,3 +60,6 @@ players = get_ball_data("players", api_key, {"per_page": 100})
 # Print the results to verify
 pprint.pprint(players)
 
+
+refined_player = clean_bball_data(players)
+pprint.pprint(refined_player.iloc[0])
